@@ -6,14 +6,20 @@
     "use strict";
     angular
         .module('ngClassifiedsapp')
-        .service('ngClassifiedsFactory',function($http){
+        .service('ngClassifiedsFactory',function($http,$firebaseArray){
 
-            function getClassifieds(){
-
+            /*function getClassifieds(){
                 return $http.get("data/classifieds.json");
             }
             return {
                 getClassifieds:getClassifieds
+            }*/
+
+            var ref = new Firebase('https://ngclassifieds-3926e.firebaseio.com/');
+
+            return {
+                ref : $firebaseArray(ref)
             }
+
         });
 })();

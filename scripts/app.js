@@ -1,5 +1,5 @@
 angular
-    .module("ngClassifiedsapp",["ngMaterial","ui.router"])
+    .module("ngClassifiedsapp",["ngMaterial","ui.router","firebase"])
     .config(function($mdThemingProvider,$stateProvider) {
         $mdThemingProvider.theme('default')
             .primaryPalette('teal')

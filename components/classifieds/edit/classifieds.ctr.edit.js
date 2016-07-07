@@ -13,7 +13,8 @@
             var vm = this;
             vm.closeSidebar= closeSidebar;
             vm.saveEdit=saveEdit;
-            vm.classified = $state.params.classified;
+            vm.classifieds= ngClassifiedsFactory.ref;
+            vm.classified =  vm.classifieds.$getRecord($state.params.id);
 
             $scope.$watch('vm.sidenavOpen',function(sidenav){
                 if(sidenav === false){
@@ -33,10 +34,18 @@
                 vm.sidenavOpen= false;
             }
 
+            function notification(message){
+                $mdToast.show($mdToast.simple()
+                    .content(message)
+                    .position('bottom right')
+                    .hideDelay(3000));
+            };
 
-            function saveEdit(classified) {
-                    console.log("here inside");
+            function saveEdit() {
+                vm.classifieds.$save(vm.classified).then(function(){
                     closeSidebar();
+                    notification("Classified Edited!");
+                });
                 //$scope.$emit('editedClassified',classified);
             };
 

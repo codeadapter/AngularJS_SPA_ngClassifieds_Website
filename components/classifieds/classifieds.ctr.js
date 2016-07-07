@@ -15,17 +15,21 @@
             vm.deleteClassified = deleteClassified;
             //vm.notification = notification;
             //vm.getCategories=getCategories;
-            //vm.classifieds;
+            vm.classifieds= ngClassifiedsFactory.ref;
+
+            vm.classifieds.$loaded().then(function(classifieds){
+                vm.categories =  getCategories(classifieds);
+            });
             //vm.classified;
             //vm.categories;
             //vm.editing;
             //$http.get("data/classifieds.json").then(function(classifieds){
             //alert('inside controller');
-            ngClassifiedsFactory.getClassifieds().then(function(classifieds){
+            /*ngClassifiedsFactory.getClassifieds().then(function(classifieds){
                 vm.classifieds =classifieds.data;
                 vm.categories =  getCategories(classifieds);
 
-            });
+            });*/
 
             function openSidebar(){
                 //$mdSidenav("left").open();
@@ -68,8 +72,8 @@
                 vm.classified = classified;
                 openSidebar();*/
                 $state.go('classifieds.edit',{
-                    id : classified.id,
-                    classified : classified
+                    id : classified.$id
+                    //classified : classified
                 });
 
             };
@@ -83,14 +87,15 @@
 
             function deleteClassified(deleteEvent,classified){
                 var confirm = $mdDialog.confirm()
-                    .title("Do you want to remove "+vm.classified.title +" ?")
+                    .title("Do you want to remove "+classified.title +" ?")
                     .ok("YES")
                     .cancel("NO")
                     .targetEvent(deleteEvent);
                 $mdDialog.show(confirm).then(function(){
-                    var index = vm.classifieds.indexOf(classified);
-                    vm.classifieds.splice(index,1);
-                    notification(classified.title+ " vm.classified Deleted!")
+                    vm.classifieds.$remove(classified);
+                   /* var index = vm.classifieds.indexOf(classified);
+                    vm.classifieds.splice(index,1)*/;
+                    notification(classified.title+ " Classified Deleted!")
                 },function(){
                     notification("Classified Delete Cancelled!")
                 })
@@ -114,8 +119,9 @@
 
             //keep checking for the newClassified value with $on function
             $scope.$on('newClassified',function(event,classified){
-                classified.id =vm.classifieds.length+1;
-                vm.classifieds.push(classified);
+                //classified.id =vm.classifieds.length+1;
+                vm.classifieds.$add(classified);
+                //vm.classifieds.push(classified);
                 vm.classified = {};
                 vm.sidenavOpen= false;
                 notification("Classified Saved!")
@@ -127,7 +133,18 @@
                 vm.sidenavOpen= false;
                 notification("Classified Saved!");
                 vm.classified = {};
-            })
+            });
+
+
+
+            /*var ref = ngClassifiedsFactory.ref;
+
+            angular.forEach(data,function(item){
+                ref.$add(item);
+            });*/
+
+
+
         });
 
 })();
